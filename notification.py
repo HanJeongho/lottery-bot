@@ -23,7 +23,7 @@ class Notification:
             username = "TEST"
             attachments = [{
                 "color": "good",
-                "text": "😎😎😎\n TEST Message 전송"
+                "text": f"{result['buyRound']}회 로또 구매 완료😎😎😎 :moneybag: 남은잔액 : {body['balance']}\n```{lotto_number_str}```"
             }]
 
             data = {"username": username, "attachments": attachments, "icon_emoji": icon_emoji}
