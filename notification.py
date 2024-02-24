@@ -14,29 +14,7 @@ class Notification:
         lotto_number_str = self.make_lotto_number_message(result["arrGameChoiceNum"])
         message = f"{result['buyRound']}회 로또 구매 완료 :moneybag: 남은잔액 : {body['balance']}\n```{lotto_number_str}```"
         self._send_discord_webhook(webhook_url, message)
-
-
-        try:
-            url = webhook_url
-            header = {'Content-type': 'application/json'}
-            icon_emoji = ":slack:"
-            username = "TEST"
-            attachments = [{
-                "color": "good",
-                "text": f"{result['buyRound']}회 로또 구매 완료😎😎😎 :moneybag: 남은잔액 : {body['balance']}\n```{lotto_number_str}```"
-            }]
-
-            data = {"username": username, "attachments": attachments, "icon_emoji": icon_emoji}
-            print(data)
-
-            # 메세지 전송
-            return requests.post(url, headers=header, json=data)
-            
-        except Exception as e:
-            print.error("Slack Message 전송에 실패했습니다.")
-            print.error("에러 내용 : " + e)
-
-            exit(0)
+        self._send_slack_webhook(webhook_url, message)
 
     def make_lotto_number_message(self, lotto_number: list) -> str:
         assert type(lotto_number) == list
@@ -93,3 +71,27 @@ class Notification:
     def _send_discord_webhook(self, webhook_url: str, message: str) -> None:        
         payload = { "content": message }
         requests.post(webhook_url, json=payload)
+
+    def _send_slack_webhook(self, webhook_url: str, message: str) -> None:        
+        payload = { "content": message }
+        try:
+            url = webhook_url
+            header = {'Content-type': 'application/json'}
+            icon_emoji = ":slack:"
+            username = "TEST"
+            attachments = [{
+                "color": "good",
+                "text": message
+            }]
+
+            data = {"username": username, "attachments": attachments, "icon_emoji": icon_emoji}
+            print(data)
+
+            # 메세지 전송
+            return requests.post(url, headers=header, json=data)
+            
+        except Exception as e:
+            print.error("Slack Message 전송에 실패했습니다.")
+            print.error("에러 내용 : " + e)
+
+            exit(0)
