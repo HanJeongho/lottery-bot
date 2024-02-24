@@ -1,4 +1,5 @@
 import requests
+import os
 
                     
 class Notification: 
@@ -13,6 +14,29 @@ class Notification:
         lotto_number_str = self.make_lotto_number_message(result["arrGameChoiceNum"])
         message = f"{result['buyRound']}회 로또 구매 완료 :moneybag: 남은잔액 : {body['balance']}\n```{lotto_number_str}```"
         self._send_discord_webhook(webhook_url, message)
+
+
+        try:
+            url = webhook_url
+            header = {'Content-type': 'application/json'}
+            icon_emoji = ":slack:"
+            username = "TEST"
+            attachments = [{
+                "color": "good",
+                "text": "😎😎😎\n TEST Message 전송"
+            }]
+
+            data = {"username": username, "attachments": attachments, "icon_emoji": icon_emoji}
+            print(data)
+
+            # 메세지 전송
+            return requests.post(url, headers=header, json=data)
+            
+        except Exception as e:
+            print.error("Slack Message 전송에 실패했습니다.")
+            print.error("에러 내용 : " + e)
+
+            exit(0)
 
     def make_lotto_number_message(self, lotto_number: list) -> str:
         assert type(lotto_number) == list
